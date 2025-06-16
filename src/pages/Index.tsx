@@ -103,17 +103,33 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-stone-50 font-inter relative overflow-hidden">
-      {/* Elegant background with texture patterns */}
-      <div className="absolute inset-0 texture-pattern"></div>
-      <div className="absolute inset-0 marble-pattern opacity-30"></div>
+      {/* Interior-based background images */}
+      <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
+          style={{
+            backgroundImage: `url('/lovable-uploads/34d3ec1f-5d16-40e4-a4cd-b54eed4a3dab.png')`
+          }}
+        ></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+          style={{
+            backgroundImage: `url('/lovable-uploads/cec37b96-b2fa-466c-bce0-12e56097efb2.png')`,
+            backgroundBlendMode: 'overlay'
+          }}
+        ></div>
+      </div>
+      
+      {/* Subtle overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-stone-50/90 via-stone-100/85 to-amber-50/90"></div>
       
       {/* Floating decorative elements */}
       <div className="absolute top-20 left-10 w-32 h-32 bg-stone-200/20 rounded-full blur-xl animate-float"></div>
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-amber-100/20 rounded-full blur-xl animate-gentle-bounce"></div>
       <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-stone-300/15 rounded-full blur-lg animate-float" style={{animationDelay: '2s'}}></div>
       
-      <div className="relative z-10 min-h-screen elegant-gradient">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="relative z-10 min-h-screen">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <div className="animate-slide-up">
             <Header />
           </div>
@@ -122,7 +138,7 @@ const Index = () => {
             <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           </div>
           
-          <div className="glass-card rounded-2xl shadow-2xl p-6 sm:p-8 md:p-12 mx-2 sm:mx-4 md:mx-0 animate-slide-up elegant-hover" style={{animationDelay: '0.4s'}}>
+          <div className="glass-card rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 mx-2 sm:mx-4 md:mx-0 animate-slide-up elegant-hover" style={{animationDelay: '0.4s'}}>
             {currentStep === 0 && (
               <ConfigurationStep
                 selectedConfig={selectedConfig}

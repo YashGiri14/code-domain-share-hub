@@ -24,7 +24,7 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
 }) => {
   return (
     <div className="animate-slide-up">
-      <div className="text-center mb-8 md:mb-12">
+      <div className="text-center mb-6 md:mb-8">
         <h2 className="heading-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-stone-800 mb-4">
           Choose the rooms
         </h2>
@@ -33,7 +33,7 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
         </p>
       </div>
       
-      <div className="max-w-lg mx-auto space-y-6 sm:space-y-8 mb-12 sm:mb-16">
+      <div className="max-w-lg mx-auto space-y-4 sm:space-y-6 mb-8 sm:mb-12">
         {rooms.map((room, index) => {
           const limits = getRoomLimits(room.name);
           return (
@@ -42,9 +42,9 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
               className="animate-slide-in-left elegant-hover"
               style={{animationDelay: `${index * 0.1}s`}}
             >
-              <div className="flex items-center justify-between p-6 bg-white/90 rounded-2xl shadow-md border border-stone-200">
+              <div className="flex items-center justify-between p-4 sm:p-6 bg-white/90 rounded-2xl shadow-md border border-stone-200">
                 <span className="heading-secondary text-lg sm:text-xl md:text-2xl text-stone-800">{room.name}</span>
-                <div className="flex items-center space-x-4 sm:space-x-6">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <button
                     onClick={() => onRoomCountChange(room.name, room.count - 1)}
                     disabled={room.count <= limits.min}
@@ -78,13 +78,13 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
       <div className="flex justify-between space-x-4 animate-scale-in" style={{animationDelay: '0.5s'}}>
         <button
           onClick={onPrevious}
-          className="px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-white text-stone-800 font-medium hover:bg-stone-50 transition-all duration-300 rounded-xl text-base sm:text-lg border border-stone-300 elegant-hover"
+          className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-gradient-to-r from-stone-800 to-stone-900 text-white font-medium hover:from-stone-700 hover:to-stone-800 transition-all duration-300 rounded-xl text-base sm:text-lg shadow-lg elegant-hover"
         >
           Previous
         </button>
         <button
           onClick={onNext}
-          className="px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 font-medium hover:from-amber-300 hover:to-amber-400 transition-all duration-300 rounded-xl text-base sm:text-lg shadow-lg elegant-hover"
+          className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 font-medium hover:from-amber-300 hover:to-amber-400 transition-all duration-300 rounded-xl text-base sm:text-lg shadow-lg elegant-hover"
         >
           Continue
         </button>
