@@ -125,7 +125,7 @@ const ResultsPage: React.FC<ResultsPageProps> = ({
                   </div>
                   
                   <div className="mt-8 space-y-4">
-                    <button className="w-full bg-gradient-to-r from-stone-800 to-stone-900 text-white py-4 font-medium hover:from-stone-700 hover:to-stone-800 transition-all duration-300 text-base sm:text-lg rounded-xl shadow-lg elegant-hover">
+                    <button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 py-4 font-medium hover:from-amber-300 hover:to-amber-400 transition-all duration-300 text-base sm:text-lg rounded-xl shadow-lg elegant-hover">
                       Visit our website
                     </button>
                     

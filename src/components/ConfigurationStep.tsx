@@ -57,7 +57,7 @@ const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
           disabled={!selectedConfig}
           className={`px-8 sm:px-10 md:px-12 py-3 sm:py-4 font-medium transition-all duration-300 rounded-xl text-base sm:text-lg elegant-hover ${
             selectedConfig
-              ? 'bg-gradient-to-r from-stone-800 to-stone-900 text-white hover:from-stone-700 hover:to-stone-800 shadow-lg hover:shadow-xl'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 hover:from-amber-300 hover:to-amber-400 shadow-lg hover:shadow-xl'
               : 'bg-stone-300 text-stone-500 cursor-not-allowed'
           }`}
         >

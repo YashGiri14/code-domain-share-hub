@@ -51,7 +51,7 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
                     className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 elegant-hover ${
                       room.count <= limits.min
                         ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                        : 'bg-stone-800 text-white hover:bg-stone-700 shadow-lg'
+                        : 'bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 hover:from-amber-300 hover:to-amber-400 shadow-lg'
                     }`}
                   >
                     <Minus size={16} className="sm:w-5 sm:h-5" />
@@ -63,7 +63,7 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
                     className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 elegant-hover ${
                       room.count >= limits.max
                         ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                        : 'bg-stone-800 text-white hover:bg-stone-700 shadow-lg'
+                        : 'bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 hover:from-amber-300 hover:to-amber-400 shadow-lg'
                     }`}
                   >
                     <Plus size={16} className="sm:w-5 sm:h-5" />
@@ -84,7 +84,7 @@ const RoomsStep: React.FC<RoomsStepProps> = ({
         </button>
         <button
           onClick={onNext}
-          className="px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-gradient-to-r from-stone-800 to-stone-900 text-white font-medium hover:from-stone-700 hover:to-stone-800 transition-all duration-300 rounded-xl text-base sm:text-lg shadow-lg elegant-hover"
+          className="px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 font-medium hover:from-amber-300 hover:to-amber-400 transition-all duration-300 rounded-xl text-base sm:text-lg shadow-lg elegant-hover"
         >
           Continue
         </button>
