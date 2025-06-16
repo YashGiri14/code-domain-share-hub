@@ -194,109 +194,121 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
                      isVerified;
 
   return showOTP ? (
-    <>
-      <OTPVerification
-        mobile={formData.mobile}
-        onVerified={handleOTPVerified}
-        onBack={handleBackFromOTP}
-        onResend={handleResendOTP}
-      />
-      <div id="recaptcha-container"></div>
-    </>
-  ) : (
-    <div className="animate-fade-in p-1 sm:p-2 md:p-4 w-full max-w-full overflow-hidden">
-      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-center mb-1 sm:mb-2 md:mb-2 text-gray-800 px-1 sm:px-2">
-  Your estimate is almost ready
-</h2>
-<p className="text-center text-gray-600 mb-2 sm:mb-3 md:mb-4 lg:mb-5 px-1 sm:px-2 text-xs sm:text-sm">
-  Tailor your space with your ideal configuration
-</p>
-
-      
-      <div className="max-w-sm mx-auto space-y-2 sm:space-y-3 md:space-y-4 mb-3 sm:mb-4 md:mb-6 px-1 sm:px-2">
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleInputChange}
-          className="w-full px-2 sm:px-3 py-2 sm:py-2.5 border border-gray-300 focus:border-yellow-400 focus:outline-none transition-colors rounded text-xs sm:text-sm"
+    <div className="relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-stone-50 to-amber-50 rounded-2xl"></div>
+      <div className="relative">
+        <OTPVerification
+          mobile={formData.mobile}
+          onVerified={handleOTPVerified}
+          onBack={handleBackFromOTP}
+          onResend={handleResendOTP}
         />
+      </div>
+      <div id="recaptcha-container"></div>
+    </div>
+  ) : (
+    <div className="animate-slide-up">
+      <div className="text-center mb-8 md:mb-12">
+        <h2 className="heading-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-stone-800 mb-4">
+          Your estimate is almost ready
+        </h2>
+        <p className="text-elegant text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+          Complete your details to receive your personalized quote
+        </p>
+      </div>
+      
+      <div className="max-w-lg mx-auto space-y-6 mb-8 sm:mb-12">
+        <div className="animate-slide-in-left" style={{animationDelay: '0.1s'}}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleInputChange}
+            className="w-full px-4 sm:px-6 py-4 sm:py-5 border-2 border-stone-200 focus:border-amber-400 focus:outline-none transition-all duration-300 rounded-xl text-base sm:text-lg bg-white/90 placeholder-stone-500"
+          />
+        </div>
         
-        <div>
+        <div className="animate-slide-in-left" style={{animationDelay: '0.2s'}}>
           <input
             type="email"
             name="email"
-            placeholder="Email ID"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleInputChange}
-            className={`w-full px-2 sm:px-3 py-2 sm:py-2.5 border ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:border-yellow-400 focus:outline-none transition-colors rounded text-xs sm:text-sm`}
+            className={`w-full px-4 sm:px-6 py-4 sm:py-5 border-2 ${errors.email ? 'border-red-400' : 'border-stone-200'} focus:border-amber-400 focus:outline-none transition-all duration-300 rounded-xl text-base sm:text-lg bg-white/90 placeholder-stone-500`}
           />
           {errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            <p className="text-red-500 text-sm mt-2 px-2">{errors.email}</p>
           )}
         </div>
         
-        <div className="flex gap-1 sm:gap-2">
-          <div className="flex-1 min-w-0">
-            <input
-              type="tel"
-              name="mobile"
-              placeholder="Mobile (10 digits)"
-              value={formData.mobile}
-              onChange={handleInputChange}
-              maxLength={10}
-              className={`w-full px-2 sm:px-3 py-2 sm:py-2.5 border ${errors.mobile ? 'border-red-500' : 'border-gray-300'} focus:border-yellow-400 focus:outline-none transition-colors rounded text-xs sm:text-sm`}
-            />
-            {errors.mobile && (
-              <p className="text-red-500 text-xs mt-1">{errors.mobile}</p>
+        <div className="animate-slide-in-left" style={{animationDelay: '0.3s'}}>
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <input
+                type="tel"
+                name="mobile"
+                placeholder="Mobile Number (10 digits)"
+                value={formData.mobile}
+                onChange={handleInputChange}
+                maxLength={10}
+                className={`w-full px-4 sm:px-6 py-4 sm:py-5 border-2 ${errors.mobile ? 'border-red-400' : 'border-stone-200'} focus:border-amber-400 focus:outline-none transition-all duration-300 rounded-xl text-base sm:text-lg bg-white/90 placeholder-stone-500`}
+              />
+              {errors.mobile && (
+                <p className="text-red-500 text-sm mt-2 px-2">{errors.mobile}</p>
+              )}
+            </div>
+            {formData.mobile.length >= 10 && validatePhone(formData.mobile) && !isVerified && (
+              <button
+                onClick={handleMobileSubmit}
+                disabled={loading}
+                className="px-6 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm sm:text-base font-medium hover:from-blue-500 hover:to-blue-600 transition-all duration-300 rounded-xl whitespace-nowrap shadow-lg elegant-hover disabled:opacity-50"
+              >
+                {loading ? 'Sending...' : 'Verify'}
+              </button>
+            )}
+            {isVerified && (
+              <div className="px-6 py-4 sm:py-5 bg-gradient-to-r from-green-100 to-green-200 text-green-700 text-sm sm:text-base font-medium rounded-xl flex items-center whitespace-nowrap shadow-md">
+                ✓ Verified
+              </div>
             )}
           </div>
-          {formData.mobile.length >= 10 && validatePhone(formData.mobile) && !isVerified && (
-            <button
-  onClick={handleMobileSubmit}
-  disabled={loading}
-  className="px-2 sm:px-3 py-2 sm:py-2.5 bg-blue-600 text-white text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors rounded whitespace-nowrap flex-shrink-0 disabled:opacity-50"
->
-  {loading ? 'Sending...' : 'Verify'}
-</button>
-          )}
-          {isVerified && (
-            <div className="px-2 sm:px-3 py-2 sm:py-2.5 bg-green-100 text-green-700 text-xs sm:text-sm font-medium rounded flex items-center whitespace-nowrap flex-shrink-0">
-              ✓ Verified
-            </div>
-          )}
         </div>
         
-        <textarea
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleInputChange}
-          rows={3}
-          className="w-full px-2 sm:px-3 py-2 sm:py-2.5 border border-gray-300 focus:border-yellow-400 focus:outline-none transition-colors resize-none rounded text-xs sm:text-sm"
-        />
+        <div className="animate-slide-in-left" style={{animationDelay: '0.4s'}}>
+          <textarea
+            name="address"
+            placeholder="Complete Address"
+            value={formData.address}
+            onChange={handleInputChange}
+            rows={4}
+            className="w-full px-4 sm:px-6 py-4 sm:py-5 border-2 border-stone-200 focus:border-amber-400 focus:outline-none transition-all duration-300 resize-none rounded-xl text-base sm:text-lg bg-white/90 placeholder-stone-500"
+          />
+        </div>
       </div>
 
-      <p className="text-center text-xs text-gray-600 mb-3 sm:mb-4 md:mb-6 px-1 sm:px-2">
-        By submitting this form, you agree to our{' '}
-        <a href="#" className="text-blue-600 underline">privacy policy</a>
-      </p>
+      <div className="animate-scale-in mb-8" style={{animationDelay: '0.5s'}}>
+        <p className="text-center text-sm text-stone-600 px-4">
+          By submitting this form, you agree to our{' '}
+          <a href="#" className="text-amber-600 underline hover:text-amber-700 transition-colors">privacy policy</a>
+        </p>
+      </div>
 
-      <div className="flex justify-between px-1 sm:px-2 gap-2">
+      <div className="flex justify-between space-x-4 animate-scale-in" style={{animationDelay: '0.6s'}}>
         <button
           onClick={onPrevious}
-          className="px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 bg-black text-white font-medium hover:bg-gray-800 transition-colors rounded text-xs sm:text-sm flex-shrink-0"
+          className="px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-white text-stone-800 font-medium hover:bg-stone-50 transition-all duration-300 rounded-xl text-base sm:text-lg border border-stone-300 elegant-hover"
         >
           Previous
         </button>
         <button
           onClick={handleSubmit}
           disabled={!isFormValid}
-          className={`px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 font-medium transition-all duration-200 rounded text-xs sm:text-sm flex-shrink-0 ${
+          className={`px-8 sm:px-10 md:px-12 py-3 sm:py-4 font-medium transition-all duration-300 rounded-xl text-base sm:text-lg elegant-hover ${
             isFormValid
-              ? 'bg-yellow-400 text-black hover:bg-yellow-500'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 hover:from-amber-300 hover:to-amber-400 shadow-lg'
+              : 'bg-stone-300 text-stone-500 cursor-not-allowed'
           }`}
         >
           Get Your Estimate

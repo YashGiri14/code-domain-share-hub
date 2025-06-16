@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface ConfigurationStepProps {
@@ -14,41 +15,53 @@ const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
   const configurations = ['1 BHK', '2 BHK', '3 BHK'];
 
   return (
-    <div className="animate-fade-in">
-      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-center mb-1 text-gray-800">
-        Choose your configuration
-      </h2>
-      <p className="text-center text-gray-600 mb-6 sm:mb-8 text-xs sm:text-sm md:text-base">
-        Tailor your space with your ideal configuration
-      </p>
+    <div className="animate-slide-up">
+      <div className="text-center mb-8 md:mb-12">
+        <h2 className="heading-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-stone-800 mb-4">
+          Choose your configuration
+        </h2>
+        <p className="text-elegant text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+          Tailor your space with your ideal configuration
+        </p>
+      </div>
       
-      <div className="max-w-md mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12">
-        {configurations.map((config) => (
-          <button
+      <div className="max-w-lg mx-auto space-y-4 sm:space-y-6 mb-12 sm:mb-16">
+        {configurations.map((config, index) => (
+          <div 
             key={config}
-            onClick={() => onConfigSelect(config)}
-            className={`w-full py-3 sm:py-4 px-4 sm:px-6 border-2 text-sm sm:text-base md:text-lg font-medium transition-all duration-200 rounded ${
-              selectedConfig === config
-                ? 'border-yellow-400 bg-yellow-50 text-gray-800'
-                : 'border-gray-300 bg-white text-gray-700 hover:border-yellow-300 hover:bg-yellow-25'
-            }`}
+            className="animate-slide-in-left"
+            style={{animationDelay: `${index * 0.1}s`}}
           >
-            {config}
-          </button>
+            <button
+              onClick={() => onConfigSelect(config)}
+              className={`w-full py-5 sm:py-6 px-6 sm:px-8 border-2 text-lg sm:text-xl md:text-2xl font-medium transition-all duration-300 rounded-2xl elegant-hover group ${
+                selectedConfig === config
+                  ? 'border-amber-400 bg-gradient-to-r from-amber-50 to-amber-100 text-stone-800 shadow-lg'
+                  : 'border-stone-200 bg-white/80 text-stone-700 hover:border-amber-300 hover:bg-amber-50/50 hover:shadow-md'
+              }`}
+            >
+              <span className="heading-secondary">{config}</span>
+              <div className={`w-full h-1 mt-3 rounded-full transition-all duration-300 ${
+                selectedConfig === config 
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500' 
+                  : 'bg-stone-200 group-hover:bg-amber-300'
+              }`}></div>
+            </button>
+          </div>
         ))}
       </div>
       
-      <div className="flex justify-end">
+      <div className="flex justify-end animate-scale-in" style={{animationDelay: '0.5s'}}>
         <button
           onClick={onNext}
           disabled={!selectedConfig}
-          className={`px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 font-medium transition-all duration-200 rounded text-sm sm:text-base ${
+          className={`px-8 sm:px-10 md:px-12 py-3 sm:py-4 font-medium transition-all duration-300 rounded-xl text-base sm:text-lg elegant-hover ${
             selectedConfig
-              ? 'bg-yellow-400 text-black hover:bg-yellow-500'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-stone-800 to-stone-900 text-white hover:from-stone-700 hover:to-stone-800 shadow-lg hover:shadow-xl'
+              : 'bg-stone-300 text-stone-500 cursor-not-allowed'
           }`}
         >
-          Next
+          Continue
         </button>
       </div>
     </div>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface Package {
@@ -36,60 +37,80 @@ const PackageStep: React.FC<PackageStepProps> = ({
   ];
 
   return (
-    <div className="animate-fade-in">
-      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-center mb-2 text-gray-800">
-        Select your package
-      </h2>
-      <p className="text-center text-gray-600 mb-6 sm:mb-8 text-xs sm:text-sm md:text-base">
-        Tailor your space with your ideal configuration
-      </p>
+    <div className="animate-slide-up">
+      <div className="text-center mb-8 md:mb-12">
+        <h2 className="heading-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-stone-800 mb-4">
+          Select your package
+        </h2>
+        <p className="text-elegant text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+          Tailor your space with your ideal configuration
+        </p>
+      </div>
       
-      <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 mb-8 sm:mb-12">
-        {packages.map((pkg) => (
+      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 mb-12 sm:mb-16">
+        {packages.map((pkg, index) => (
           <div
             key={pkg.name}
             onClick={() => onPackageSelect(pkg.name)}
-            className={`border-2 p-2 sm:p-4 md:p-6 cursor-pointer transition-all duration-200 rounded-lg ${
+            className={`animate-slide-in-left elegant-hover cursor-pointer transition-all duration-300 rounded-3xl overflow-hidden ${
               selectedPackage === pkg.name
-                ? 'border-yellow-400 bg-yellow-50'
-                : 'border-gray-300 bg-white hover:border-yellow-300'
+                ? 'ring-4 ring-amber-400 shadow-2xl bg-gradient-to-br from-amber-50 to-white'
+                : 'bg-white/90 hover:shadow-xl border border-stone-200'
             }`}
+            style={{animationDelay: `${index * 0.2}s`}}
           >
-            <div className="flex flex-col sm:flex-row items-start space-y-2 sm:space-y-0 sm:space-x-4">
-              <img
-                src={pkg.image}
-                alt={pkg.name}
-                className="w-full h-48 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 object-cover rounded flex-shrink-0"
-              />
-              <div className="flex-1 text-center sm:text-left px-2 sm:px-0">
-                <div className="flex flex-col sm:flex-row items-center sm:space-x-2 mb-2">
-                  <h3 className="text-sm sm:text-lg md:text-xl font-semibold text-gray-800">{pkg.name}</h3>
-                  <span className="text-xs sm:text-md md:text-lg text-gray-600">({pkg.price})</span>
+            <div className="flex flex-col lg:flex-row items-center p-6 sm:p-8">
+              <div className="relative w-full lg:w-1/2 mb-6 lg:mb-0 lg:mr-8">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
+                  <img
+                    src={pkg.image}
+                    alt={pkg.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
                 </div>
-                <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">{pkg.description}</p>
+                <div className="absolute -top-4 -right-4 bg-gradient-to-r from-amber-400 to-amber-500 text-stone-800 px-4 py-2 rounded-full font-semibold shadow-lg">
+                  {pkg.price}
+                </div>
+              </div>
+              
+              <div className="flex-1 text-center lg:text-left">
+                <h3 className="heading-secondary text-2xl sm:text-3xl md:text-4xl font-semibold text-stone-800 mb-4">
+                  {pkg.name}
+                </h3>
+                <p className="text-elegant text-base sm:text-lg leading-relaxed max-w-lg">
+                  {pkg.description}
+                </p>
+                
+                <div className={`mt-6 inline-flex items-center px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                  selectedPackage === pkg.name
+                    ? 'bg-amber-400 text-stone-800'
+                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                }`}>
+                  {selectedPackage === pkg.name ? 'Selected' : 'Select Package'}
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-between space-x-2">
+      <div className="flex justify-between space-x-4 animate-scale-in" style={{animationDelay: '0.6s'}}>
         <button
           onClick={onPrevious}
-          className="px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 bg-black text-white font-medium hover:bg-gray-800 transition-colors rounded text-sm sm:text-base"
+          className="px-8 sm:px-10 md:px-12 py-3 sm:py-4 bg-white text-stone-800 font-medium hover:bg-stone-50 transition-all duration-300 rounded-xl text-base sm:text-lg border border-stone-300 elegant-hover"
         >
           Previous
         </button>
         <button
           onClick={onNext}
           disabled={!selectedPackage}
-          className={`px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 font-medium transition-all duration-200 rounded text-sm sm:text-base ${
+          className={`px-8 sm:px-10 md:px-12 py-3 sm:py-4 font-medium transition-all duration-300 rounded-xl text-base sm:text-lg elegant-hover ${
             selectedPackage
-              ? 'bg-yellow-400 text-black hover:bg-yellow-500'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-stone-800 to-stone-900 text-white hover:from-stone-700 hover:to-stone-800 shadow-lg'
+              : 'bg-stone-300 text-stone-500 cursor-not-allowed'
           }`}
         >
-          Next
+          Continue
         </button>
       </div>
     </div>
