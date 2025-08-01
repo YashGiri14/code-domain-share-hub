@@ -17,6 +17,7 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
   const [showOTPPopup, setShowOTPPopup] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string>('');
   const [errors, setErrors] = useState({
     mobile: ''
   });
@@ -36,24 +37,50 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
     try {
       setLoading(true);
       
-      // Demo mode: Show OTP popup without sending actual OTP
-      console.log('Demo mode: Showing OTP popup');
-      setShowOTPPopup(true);
+      // Call your backend API to send OTP
+      const response = await fetch('http://localhost:3001/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mobile: `+91${mobile}` })
+      });
       
-      // Show demo message
-      const successMsg = document.createElement('div');
-      successMsg.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded z-50';
-      successMsg.textContent = 'Demo mode: Use 123456 as OTP';
-      document.body.appendChild(successMsg);
-      setTimeout(() => {
-        if (document.body.contains(successMsg)) {
-          document.body.removeChild(successMsg);
-        }
-      }, 5000);
+      const result = await response.json();
+      console.log('OTP Send Response:', result);
+      
+      if (result.success && result.data?.Details) {
+        // Extract session ID from the response
+        setSessionId(result.data.Details);
+        setShowOTPPopup(true);
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded z-50';
+        successMsg.textContent = 'OTP sent successfully!';
+        document.body.appendChild(successMsg);
+        setTimeout(() => {
+          if (document.body.contains(successMsg)) {
+            document.body.removeChild(successMsg);
+          }
+        }, 3000);
+      } else {
+        throw new Error(result.message || 'Failed to send OTP');
+      }
       
     } catch (error) {
-      console.error('Error:', error);
-      setShowOTPPopup(true);
+      console.error('Error sending OTP:', error);
+      
+      // Show error message
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded z-50';
+      errorMsg.textContent = 'Failed to send OTP. Please try again.';
+      document.body.appendChild(errorMsg);
+      setTimeout(() => {
+        if (document.body.contains(errorMsg)) {
+          document.body.removeChild(errorMsg);
+        }
+      }, 3000);
     } finally {
       setLoading(false);
     }
@@ -87,35 +114,78 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
 
   const handleOTPVerified = async (enteredOtp: string) => {
     try {
-      // Demo OTP verification
-      if (enteredOtp === '123456') {
-        console.log('Demo OTP verified');
+      if (!sessionId) {
+        console.error('No session ID available');
+        return false;
+      }
+
+      // Call your backend API to verify OTP
+      const response = await fetch('http://localhost:3001/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          sessionId: sessionId,
+          otp: enteredOtp 
+        })
+      });
+
+      const result = await response.json();
+      console.log('OTP Verification Response:', result);
+
+      if (result.success && result.data?.Status === 'Success') {
+        console.log('OTP verified successfully');
         setIsVerified(true);
         setShowOTPPopup(false);
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded z-50';
+        successMsg.textContent = 'OTP verified successfully!';
+        document.body.appendChild(successMsg);
+        setTimeout(() => {
+          if (document.body.contains(successMsg)) {
+            document.body.removeChild(successMsg);
+          }
+        }, 3000);
         
         // Auto-submit after verification
         setTimeout(() => {
           console.log('Auto-submitting after OTP verification...');
-          console.log('Form data:', formData);
-          console.log('Form valid check:', formData.name && formData.mobile && validatePhone(formData.mobile) && formData.address);
           if (formData.name && formData.mobile && validatePhone(formData.mobile) && formData.address) {
             console.log('Calling onSubmit...');
             onSubmit(formData);
-          } else {
-            console.log('Form validation failed:', {
-              name: formData.name,
-              mobile: formData.mobile,
-              mobileValid: validatePhone(formData.mobile),
-              address: formData.address
-            });
           }
         }, 100);
         
         return true;
+      } else {
+        // Show error message for invalid OTP
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded z-50';
+        errorMsg.textContent = 'Invalid OTP. Please try again.';
+        document.body.appendChild(errorMsg);
+        setTimeout(() => {
+          if (document.body.contains(errorMsg)) {
+            document.body.removeChild(errorMsg);
+          }
+        }, 3000);
+        return false;
       }
-      return false;
     } catch (error) {
       console.error('Error verifying OTP:', error);
+      
+      // Show error message
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded z-50';
+      errorMsg.textContent = 'Failed to verify OTP. Please try again.';
+      document.body.appendChild(errorMsg);
+      setTimeout(() => {
+        if (document.body.contains(errorMsg)) {
+          document.body.removeChild(errorMsg);
+        }
+      }, 3000);
       return false;
     }
   };
