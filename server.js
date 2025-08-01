@@ -20,9 +20,28 @@ const API_CONFIG = {
 // Send OTP (SMS with voice fallback handled by 2Factor)
 app.post('/send-otp', async (req, res) => {
     try {
-        const url = `${API_CONFIG.baseURL}/${API_CONFIG.apiKey}/SMS/${API_CONFIG.phoneNumber}/AUTOGEN2/${API_CONFIG.template}`;
+        const { mobile } = req.body;
         
-        console.log('Sending OTP to:', API_CONFIG.phoneNumber);
+        if (!mobile) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mobile number is required'
+            });
+        }
+        
+        // Extract just the 10-digit number from mobile (remove +91 prefix if present)
+        const cleanMobile = mobile.replace(/^\+91/, '').replace(/\D/g, '');
+        
+        if (cleanMobile.length !== 10) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide a valid 10-digit mobile number'
+            });
+        }
+        
+        const url = `${API_CONFIG.baseURL}/${API_CONFIG.apiKey}/SMS/${cleanMobile}/AUTOGEN2/${API_CONFIG.template}`;
+        
+        console.log('Sending OTP to:', cleanMobile);
         console.log('API URL:', url);
         
         const response = await axios.get(url);
@@ -58,7 +77,7 @@ app.post('/verify-otp', async (req, res) => {
             });
         }
         
-        const url = `${API_CONFIG.baseURL}/${API_CONFIG.apiKey}/VOICE/VERIFY/${sessionId}/${otp}`;
+        const url = `${API_CONFIG.baseURL}/${API_CONFIG.apiKey}/SMS/VERIFY/${sessionId}/${otp}`;
         
         console.log('Verifying OTP for session:', sessionId);
         
