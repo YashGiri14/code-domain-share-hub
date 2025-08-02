@@ -1,7 +1,6 @@
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,74 +17,13 @@ const API_CONFIG = {
     template: 'OTPTemplate'
 };
 
-// Email configuration
-const emailTransporter = nodemailer.createTransporter({
-    service: 'gmail',
-    auth: {
-        user: 'your-email@gmail.com', // Replace with your email
-        pass: 'your-app-password' // Replace with your app password
-    }
-});
-
-const LEAD_EMAIL = 'yashgiri588@gmail.com';
-
-// Email sending function
-async function sendLeadEmail(userData: UserData, status: 'verification pending' | 'verified') {
-    try {
-        const roomsList = Object.entries(userData.rooms)
-            .map(([room, count]) => `${room}: ${count}`)
-            .join('\n');
-
-        const emailSubject = status === 'verification pending' 
-            ? 'New Lead - Verification Pending' 
-            : 'New Lead - Verified';
-
-        const emailBody = `
-New Lead
-
-Name: ${userData.name}
-Flat: ${userData.configuration}
-Rooms:
-${roomsList}
-Package: ${userData.packageType}
-Mobile: ${userData.mobile}
-Email: ${userData.email}
-Property: ${userData.address}
-Status: ${status}
-        `.trim();
-
-        await emailTransporter.sendMail({
-            from: 'your-email@gmail.com', // Replace with your email
-            to: LEAD_EMAIL,
-            subject: emailSubject,
-            text: emailBody
-        });
-
-        console.log(`Lead email sent successfully with status: ${status}`);
-    } catch (error) {
-        console.error('Error sending lead email:', error);
-    }
-}
-
-interface UserData {
-    name: string;
-    email: string;
-    mobile: string;
-    address: string;
-    configuration: string;
-    rooms: Record<string, number>;
-    packageType: string;
-}
-
 interface SendOTPRequest {
     mobile: string;
-    userData: UserData;
 }
 
 interface VerifyOTPRequest {
     sessionId: string;
     otp: string;
-    userData: UserData;
 }
 
 interface APIResponse {
@@ -98,7 +36,7 @@ interface APIResponse {
 // Send OTP (Force SMS delivery)
 app.post('/send-otp', async (req: express.Request<{}, APIResponse, SendOTPRequest>, res: express.Response<APIResponse>) => {
     try {
-        const { mobile, userData } = req.body;
+        const { mobile } = req.body;
         
         if (!mobile) {
             return res.status(400).json({
@@ -128,11 +66,6 @@ app.post('/send-otp', async (req: express.Request<{}, APIResponse, SendOTPReques
         
         console.log('OTP API Response:', response.data);
         
-        // Send email with verification pending status
-        if (userData) {
-            await sendLeadEmail(userData, 'verification pending');
-        }
-        
         res.json({
             success: true,
             message: 'OTP sent successfully via SMS',
@@ -153,7 +86,7 @@ app.post('/send-otp', async (req: express.Request<{}, APIResponse, SendOTPReques
 // Verify OTP
 app.post('/verify-otp', async (req: express.Request<{}, APIResponse, VerifyOTPRequest>, res: express.Response<APIResponse>) => {
     try {
-        const { sessionId, otp, userData } = req.body;
+        const { sessionId, otp } = req.body;
         
         if (!sessionId || !otp) {
             return res.status(400).json({
@@ -169,11 +102,6 @@ app.post('/verify-otp', async (req: express.Request<{}, APIResponse, VerifyOTPRe
         const response = await axios.get(url);
         
         console.log('OTP Verification Response:', response.data);
-        
-        // Send email with verified status after successful OTP verification
-        if (userData && response.data && response.data.Status === 'Success') {
-            await sendLeadEmail(userData, 'verified');
-        }
         
         res.json({
             success: true,

@@ -161,9 +161,6 @@ const Index = () => {
                 <ContactStep
                   onSubmit={handleContactSubmit}
                   onPrevious={previousStep}
-                  selectedConfig={selectedConfig}
-                  rooms={rooms.reduce((acc, room) => ({ ...acc, [room.name]: room.count }), {})}
-                  selectedPackage={selectedPackage}
                 />
               )}
             </div>
