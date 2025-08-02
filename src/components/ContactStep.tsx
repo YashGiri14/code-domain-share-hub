@@ -4,9 +4,12 @@ import OTPPopup from './OTPPopup';
 interface ContactStepProps {
   onSubmit: (formData: any) => void;
   onPrevious: () => void;
+  selectedConfig: string;
+  rooms: Record<string, number>;
+  selectedPackage: string;
 }
 
-const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
+const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious, selectedConfig, rooms, selectedPackage }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,13 +40,27 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
     try {
       setLoading(true);
       
+      // Prepare user data for email
+      const userData = {
+        name: formData.name,
+        email: formData.email,
+        mobile: formData.mobile,
+        address: formData.address,
+        configuration: selectedConfig,
+        rooms: rooms,
+        packageType: selectedPackage
+      };
+      
       // Call your backend API to send OTP
       const response = await fetch('http://localhost:3001/send-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ mobile: `+91${mobile}` })
+        body: JSON.stringify({ 
+          mobile: `+91${mobile}`,
+          userData: userData
+        })
       });
       
       const result = await response.json();
@@ -119,6 +136,17 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
         return false;
       }
 
+      // Prepare user data for email
+      const userData = {
+        name: formData.name,
+        email: formData.email,
+        mobile: formData.mobile,
+        address: formData.address,
+        configuration: selectedConfig,
+        rooms: rooms,
+        packageType: selectedPackage
+      };
+
       // Call your backend API to verify OTP
       const response = await fetch('http://localhost:3001/verify-otp', {
         method: 'POST',
@@ -127,7 +155,8 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit, onPrevious }) => {
         },
         body: JSON.stringify({ 
           sessionId: sessionId,
-          otp: enteredOtp 
+          otp: enteredOtp,
+          userData: userData
         })
       });
 
